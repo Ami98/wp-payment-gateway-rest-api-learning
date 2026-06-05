@@ -3,9 +3,88 @@
 Plugin Name: WP Payment Gateway REST API Learning
 Description: A learning project demonstrating WordPress REST API, AJAX, payment gateway integration, and custom database operations.
 Version: 1.0
-Author: Ami Dalwadi
+Author: Your Name
 */
 
 if (!defined('ABSPATH')) {
     exit;
 }
+
+require_once plugin_dir_path(__FILE__) . 'includes/database.php';
+require_once plugin_dir_path(__FILE__) . 'includes/rest-routes.php';
+require_once plugin_dir_path(__FILE__) . 'includes/save-payment.php';
+
+register_activation_hook(__FILE__, 'wppgral_create_table');
+
+/**
+ * Load JS
+ */
+function wppgral_enqueue_scripts()
+{
+
+    wp_enqueue_script(
+        'razorpay-checkout',
+        'https://checkout.razorpay.com/v1/checkout.js',
+        [],
+        null,
+        true
+    );
+
+    wp_enqueue_script(
+        'wppgral-payment',
+        plugin_dir_url(__FILE__) . 'assets/js/payment.js',
+        ['jquery'],
+        '1.0',
+        true
+    );
+
+    wp_localize_script(
+        'wppgral-payment',
+        'wppgral',
+        [
+            'rest_url' => rest_url('wppgral/v1/save-payment'),
+        ]
+    );
+}
+add_action('wp_enqueue_scripts', 'wppgral_enqueue_scripts');
+
+
+/**
+ * Shortcode
+ * [wppgral_payment_form]
+ */
+function wppgral_payment_form_shortcode()
+{
+
+    ob_start();
+?>
+
+    <form id="wppgral-payment-form">
+
+        <p>
+            <input type="text" id="name" placeholder="Name" required>
+        </p>
+
+        <p>
+            <input type="email" id="email" placeholder="Email" required>
+        </p>
+
+        <p>
+            <input type="number" id="amount" value="500" required>
+        </p>
+
+        <p>
+            <button type="submit">
+                Pay Now
+            </button>
+        </p>
+
+    </form>
+
+    <div id="payment-response"></div>
+
+<?php
+
+    return ob_get_clean();
+}
+add_shortcode('wppgral_payment_form', 'wppgral_payment_form_shortcode');
