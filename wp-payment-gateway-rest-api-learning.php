@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'includes/database.php';
 require_once plugin_dir_path(__FILE__) . 'includes/rest-routes.php';
 require_once plugin_dir_path(__FILE__) . 'includes/save-payment.php';
+require_once plugin_dir_path(__FILE__) . 'includes/shortcode.php';
 
 register_activation_hook(__FILE__, 'wppgral_create_table');
 
@@ -47,44 +48,3 @@ function wppgral_enqueue_scripts()
     );
 }
 add_action('wp_enqueue_scripts', 'wppgral_enqueue_scripts');
-
-
-/**
- * Shortcode
- * [wppgral_payment_form]
- */
-function wppgral_payment_form_shortcode()
-{
-
-    ob_start();
-?>
-
-    <form id="wppgral-payment-form">
-
-        <p>
-            <input type="text" id="name" placeholder="Name" required>
-        </p>
-
-        <p>
-            <input type="email" id="email" placeholder="Email" required>
-        </p>
-
-        <p>
-            <input type="number" id="amount" value="500" required>
-        </p>
-
-        <p>
-            <button type="submit">
-                Pay Now
-            </button>
-        </p>
-
-    </form>
-
-    <div id="payment-response"></div>
-
-<?php
-
-    return ob_get_clean();
-}
-add_shortcode('wppgral_payment_form', 'wppgral_payment_form_shortcode');
