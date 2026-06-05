@@ -1,5 +1,13 @@
 <?php
 
+/*********************
+STEP 6 : The plugin defines a shortcode [wppgral_payment_form] that renders a payment form on the frontend. The form includes fields for the user's name, email, and payment amount, along with a "Pay Now" button. When the form is submitted, it triggers JavaScript code that processes the payment using Razorpay's checkout and sends the payment details to the REST API endpoint for saving in the database. The shortcode allows users to easily embed the payment form on any page or post by simply adding the shortcode to the content.
+ **********************/
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Shortcode
  * [wppgral_payment_form]

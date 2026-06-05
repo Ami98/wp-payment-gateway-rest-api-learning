@@ -1,5 +1,10 @@
 <?php
 
+/*********************
+ STEP 4: The plugin defines the wppgral_create_table function, which is responsible for creating a custom database table to store payment records. This function uses the WordPress $wpdb object to execute a SQL query that creates a table with fields for the user's name, email, amount, payment ID, status, and creation timestamp. The dbDelta function is used to ensure that the table is created correctly and can be updated in the future if needed.
+ **********************/
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
