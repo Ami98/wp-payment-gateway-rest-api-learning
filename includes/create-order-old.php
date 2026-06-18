@@ -7,10 +7,14 @@ if (!defined('ABSPATH')) {
 /*********************
 STEP 11 : The plugin defines a REST API route /wppgral/v1/save-payment that listens for POST requests. When a request is made to this endpoint, it triggers the wppgral_save_payment function, which processes the incoming payment data and saves it to the database. The permission_callback is set to __return_true, allowing anyone to access this endpoint without authentication, which is suitable for processing payments from the frontend.
  **********************/
+/**
+ * Create Razorpay Order
+ */
 
-
-function wppgral_save_payment($request)
+function wppgral_create_order($request)
 {
+
+
 
     global $wpdb;
 

@@ -14,21 +14,29 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/*********************
- STEP 2 : The plugin registers an activation hook that calls the wppgral_create_table function when the plugin is "activated". This function creates a custom database table to store payment records, including fields for the user's name, email, amount, payment ID, status, and creation timestamp.
- **********************/
-register_activation_hook(__FILE__, 'wppgral_create_table');
-
 
 /*********************
- STEP 3: The plugin includes several PHP files that contain the core functionality of the plugin. 
+ STEP 2: The plugin includes several PHP files that contain the core functionality of the plugin. 
 These files handle database operations, define REST API routes, process payment saving logic, and create a shortcode for displaying the payment form.
  **********************/
 
 require_once plugin_dir_path(__FILE__) . 'includes/database.php';
 require_once plugin_dir_path(__FILE__) . 'includes/rest-routes.php';
-require_once plugin_dir_path(__FILE__) . 'includes/save-payment.php';
 require_once plugin_dir_path(__FILE__) . 'includes/shortcode.php';
+require_once plugin_dir_path(__FILE__) . 'includes/create-order.php';
+require_once plugin_dir_path(__FILE__) . 'includes/verify-payment.php';
+require_once plugin_dir_path(__FILE__) . 'includes/settings-page.php';
+require_once plugin_dir_path(__FILE__) . 'includes/admin-payments.php';
+require_once plugin_dir_path(__FILE__) . 'includes/logger.php';
+require_once plugin_dir_path(__FILE__) . 'includes/admin-logs.php';
+
+
+/*********************
+ STEP 3 : The plugin registers an activation hook that calls the wppgral_create_table function when the plugin is "activated". This function creates a custom database table to store payment records, including fields for the user's name, email, amount, payment ID, status, and creation timestamp.
+ **********************/
+register_activation_hook(__FILE__, 'wppgral_create_table');
+
+
 
 
 
@@ -37,7 +45,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/shortcode.php';
  **********************/
 
 /**
- * Load JS
+ * Load JS , | Enqueue Scripts
  */
 function wppgral_enqueue_scripts()
 {
@@ -62,7 +70,11 @@ function wppgral_enqueue_scripts()
         'wppgral-payment',
         'wppgral',
         [
-            'rest_url' => rest_url('wppgral/v1/save-payment'),
+            'rest_url' => rest_url('wppgral/v1/'),
+            'nonce' => wp_create_nonce('wp_rest'),
+
+            // Test Key ID only
+            'razorpay_key' => get_option('wppgral_razorpay_key_id')
         ]
     );
 }

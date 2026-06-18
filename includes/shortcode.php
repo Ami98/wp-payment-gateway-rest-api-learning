@@ -1,18 +1,13 @@
 <?php
-
-/*********************
-STEP 6 : The plugin defines a shortcode [wppgral_payment_form] that renders a payment form on the frontend. The form includes fields for the user's name, email, and payment amount, along with a "Pay Now" button. When the form is submitted, it triggers JavaScript code that processes the payment using Razorpay's checkout and sends the payment details to the REST API endpoint for saving in the database. The shortcode allows users to easily embed the payment form on any page or post by simply adding the shortcode to the content.
- **********************/
-
-if (!defined('ABSPATH')) {
-    exit;
-}
-
-/**
- * Shortcode
- * [wppgral_payment_form]
- */
-
+/*
+|--------------------------------------------------------------------------
+| Payment Form Shortcode
+|--------------------------------------------------------------------------
+|
+| Usage:
+| [wppgral_payment_form]
+|
+*/
 
 function wppgral_payment_form_shortcode()
 {
@@ -23,15 +18,29 @@ function wppgral_payment_form_shortcode()
     <form id="wppgral-payment-form">
 
         <p>
-            <input type="text" id="name" placeholder="Name" required>
+            <label>Name</label><br>
+            <input
+                type="text"
+                id="wppgral-name"
+                required>
         </p>
 
         <p>
-            <input type="email" id="email" placeholder="Email" required>
+            <label>Email</label><br>
+            <input
+                type="email"
+                id="wppgral-email"
+                required>
         </p>
 
         <p>
-            <input type="number" id="amount" value="500" required>
+            <label>Amount (INR)</label><br>
+            <input
+                type="number"
+                id="wppgral-amount"
+                value="500"
+                min="1"
+                required>
         </p>
 
         <p>
@@ -48,4 +57,8 @@ function wppgral_payment_form_shortcode()
 
     return ob_get_clean();
 }
-add_shortcode('wppgral_payment_form', 'wppgral_payment_form_shortcode');
+
+add_shortcode(
+    'wppgral_payment_form',
+    'wppgral_payment_form_shortcode'
+);

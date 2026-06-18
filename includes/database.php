@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) {
 function wppgral_create_table()
 {
 
+    // Loads WordPress database class.
     global $wpdb;
 
     $table = $wpdb->prefix . 'wppgral_payments';
@@ -23,8 +24,11 @@ function wppgral_create_table()
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         amount DECIMAL(10,2) NOT NULL,
-        payment_id VARCHAR(255) NOT NULL,
+        razorpay_order_id VARCHAR(255) NOT NULL,
+        razorpay_payment_id VARCHAR(255) NOT NULL,
+        payment_status VARCHAR(50) NOT NULL,
         status VARCHAR(50) NOT NULL,
+        failure_reason TEXT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
     ) $charset_collate;";
@@ -32,4 +36,20 @@ function wppgral_create_table()
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     dbDelta($sql);
+
+    $logs_table = $wpdb->prefix . 'wppgral_logs';
+
+    $sql_logs = " CREATE TABLE {$logs_table}
+        (
+        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        razorpay_order_id VARCHAR(255),
+        event_name VARCHAR(100),
+        message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id)
+        ) {$charset_collate};";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+    dbDelta($sql_logs);
 }
